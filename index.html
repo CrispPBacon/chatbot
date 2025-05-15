@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Spot Chatbot</title>
+    <style>
+        body {
+            background-image: url("world-map-pictures-zrxbo04youfklamw.jpg");
+            background-size: 100%;
+        }
+
+        /* Basic styles for chat bubbles */
+        .chat-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #ccaf7179;
+            height: 400px;
+            overflow-y: scroll;
+        }
+        .user-message, .bot-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .user-message {
+            background-color: #74da9ea4;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #56928d;
+            text-align: left;
+        }
+
+        /* Input section styling */
+        .input-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        #userInput {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container" id="chatContainer">
+        <!-- Chat bubbles will be added here dynamically -->
+    </div>
+
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Ask about tourist spots...">
+        <button onclick="getResponse()">Ask</button>
+    </div>
+
+    <!-- Load external FAQ data -->
+    <script src="tourist_spots_faq.js"></script>
+
+    <!-- Chatbot logic -->
+    <script>
+        // Function to get a random response
+        function getRandomResponse(responses) {
+            const randomIndex = Math.floor(Math.random() * responses.length);
+            return responses[randomIndex];
+        }
+
+        // Function to simulate the chat conversation
+        function getResponse() {
+            const userInput = document.getElementById("userInput").value.toLowerCase().trim();
+            const chatContainer = document.getElementById("chatContainer");
+
+            // Display user message
+            if (userInput) {
+                const userMessageDiv = document.createElement("div");
+                userMessageDiv.classList.add("user-message");
+                userMessageDiv.textContent = userInput;
+                chatContainer.appendChild(userMessageDiv);
+
+                // Get bot response based on user input
+                const response = questions[userInput] ? getRandomResponse(questions[userInput]) : "Sorry, I don't know the answer to that.";
+
+                // Display bot response
+                const botMessageDiv = document.createElement("div");
+                botMessageDiv.classList.add("bot-message");
+                botMessageDiv.textContent = response;
+                chatContainer.appendChild(botMessageDiv);
+
+                // Scroll to the bottom of the chat
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+
+            // Clear the input field
+            document.getElementById("userInput").value = "";
+        }
+
+        // Trigger response on Enter key
+        document.getElementById("userInput").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                getResponse();
+            }
+        });
+
+        // Exit confirmation alert
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = "sure to exit?";
+        });
+    </script>
+
+</body>
+</html>

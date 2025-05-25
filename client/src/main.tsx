@@ -6,7 +6,7 @@ import { AuthProvider } from "./context/AuthProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Router>
+    <Router basename="/chatbot">
       <AuthProvider>
         <App />
       </AuthProvider>

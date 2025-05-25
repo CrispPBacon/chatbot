@@ -33,18 +33,16 @@ export default function ChatLayout() {
   }, [id, navigate]);
 
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!msgContent) return;
+    if (!msgContent.trim()) return;
     if (e.key == "Enter" && !showLoader) {
       setMsgContent("");
       setShowLoader(true);
       onHandleSubmit();
-      console.log(msgContent);
     }
   };
 
   const onHandleSubmit = () => {
     const data = { content: msgContent };
-
     if (id) {
       const user_message = {
         content: msgContent,
@@ -52,6 +50,7 @@ export default function ChatLayout() {
         conversation_id: id,
         user_id: auth?.user._id,
       };
+      const data = { messages: [user_message, ...messages] };
       setMessages((prev) => [user_message, ...prev]);
       api
         .post(`/api/chat/${id}`, { data }, { withCredentials: true })
@@ -67,7 +66,6 @@ export default function ChatLayout() {
       api
         .post("/api/chat", { data }, { withCredentials: true })
         .then((res) => {
-          console.log(res.data);
           navigate(res.data._id, { replace: true });
           setShowLoader(false);
           api

@@ -31,6 +31,6 @@ export const validateSignUp = [
 
 export const validateConversation = [
   checkConversation,
-  createFieldValidator(["data.content"], 1),
+  createFieldValidator(["data.messages"], 1),
   handleValidationErrors,
 ];

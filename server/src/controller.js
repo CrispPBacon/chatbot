@@ -2,6 +2,7 @@ import User from "./models/user.js";
 import { isValidSession, loginUser } from "./services/auth.js";
 import {
   createNewChat,
+  deleteChat,
   getConversations,
   getMessages,
   sendPromptRequest,
@@ -108,8 +109,16 @@ export async function sendPrompt(req, res, next) {
   try {
     const { id } = req.params;
     const user_id = req.session?.user_id;
-    const { content } = req.body.data || {};
-    const response = await sendPromptRequest(user_id, id, content);
+    const { messages } = req.body.data || {};
+
+    const simplifiedMessages = messages.map(({ content, role }) => ({
+      content,
+      role,
+    }));
+
+    const messages_content = simplifiedMessages.reverse();
+
+    const response = await sendPromptRequest(user_id, id, messages_content);
 
     return res.status(200).json(response);
   } catch (e) {
@@ -136,6 +145,18 @@ export async function fetchConversations(req, res, next) {
     const user_id = req.session?.user_id;
     const data = await getConversations(user_id);
     return res.status(200).json(data.reverse());
+  } catch (e) {
+    next(e);
+  }
+}
+
+/* DELETE http://localhost:3000/api/chat/:id  */
+export async function deleteConversation(req, res, next) {
+  try {
+    const _id = req.params.id;
+    const user_id = req.session?.user_id;
+    await deleteChat(_id, user_id);
+    res.status(200).json({ msg: `DELETED ${_id}` });
   } catch (e) {
     next(e);
   }

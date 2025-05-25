@@ -54,7 +54,7 @@ app.use([
 ]);
 app.use([session(session_config), session_log, router, errorHandlerMiddleware]);
 
-app.listen(PORT, HOST, () => {
+app.listen(PORT, () => {
   console.log(`Server listening at http://${HOST}:${PORT}`);
   connect();
 });

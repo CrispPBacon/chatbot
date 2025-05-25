@@ -8,6 +8,7 @@ import {
   sendPrompt,
   fetchMessages,
   fetchConversations,
+  deleteConversation,
 } from "./controller.js";
 import {
   validateConversation,
@@ -23,6 +24,10 @@ const router = express.Router();
 router.route("/api/login").post(validateLogin, login).get(refreshAuth);
 router.route("/api/user").post(validateSignUp, createUser);
 
+router.route("/api/ping").get((req, res) => {
+  return res.status(200).json({ msg: "OK" });
+});
+
 // ? [PRIVATE] ROUTES
 router.use(verifyAuth);
 
@@ -31,7 +36,8 @@ router.route("/api/chat").post(newConversation).get(fetchConversations);
 router
   .route("/api/chat/:id")
   .post(validateConversation, sendPrompt)
-  .get(checkConversation, fetchMessages);
+  .get(checkConversation, fetchMessages)
+  .delete(checkConversation, deleteConversation);
 
 router.route("/api/logout").delete(logout);
 

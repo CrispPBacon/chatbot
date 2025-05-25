@@ -133,7 +133,6 @@
 .conversation-row,
 .conversation-row-date {
   padding: 0 1rem;
-  padding-right: 2.5rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1; /* number of lines to show */
@@ -141,7 +140,8 @@
   overflow: hidden;
   line-height: 3;
   text-overflow: clip;
-  padding-right: 1rem;
+  padding-right: 1.25rem;
+  position: relative;
 }
 .conversation-row:not(:last-child) {
   margin-bottom: 0.1rem;
@@ -167,6 +167,22 @@
 .sidebar-menu button {
   width: 100%;
   margin-top: 0.5rem;
+}
+
+.conversation-row-delete,
+.delete-icon-2 {
+  display: none;
+}
+.conversation-row:hover .conversation-row-delete,
+.delete-icon {
+  display: flex;
+}
+
+.conversation-row-delete:hover .delete-icon {
+  display: none;
+}
+.conversation-row-delete:hover .delete-icon-2 {
+  display: flex;
 }
 
 /* ? AUTH FORM */

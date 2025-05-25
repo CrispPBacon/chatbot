@@ -2,12 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api";
 import useAuth from "../hooks/useAuth";
 import { useEffect } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { setAuth, auth, conversationList } = useAuth();
-
+  const { setAuth, auth, conversationList, setConversationList } = useAuth();
   const { id } = useParams();
+
   useEffect(() => {
     if (id) console.log(id);
   }, [id]);
@@ -22,6 +24,26 @@ export default function Sidebar() {
       })
       .catch((e) => console.log(e?.response?.data?.error || e));
   };
+
+  const handleDelete = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    conversation_id: string
+  ) => {
+    e.stopPropagation();
+    api
+      .delete(`/api/chat/${conversation_id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setConversationList((prev) => {
+          return prev.filter((item) => item._id !== conversation_id);
+        });
+        navigate("/");
+      })
+      .catch((e) => console.log(e?.response?.data?.error || e));
+  };
+
   return (
     <aside className="sidebar light-shadow">
       <div className="conversation-container">
@@ -43,6 +65,8 @@ export default function Sidebar() {
               key={conversation._id}
               title={conversation.title}
               handleClick={() => navigate(`/${conversation._id}`)}
+              handleDelete={handleDelete}
+              conversation_id={conversation._id}
             />
           ))}
         </div>
@@ -79,11 +103,39 @@ export default function Sidebar() {
 interface ConversationRowProps {
   title: string;
   handleClick: () => void;
+  handleDelete: (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    conversation_id: string
+  ) => void;
+  conversation_id: string;
 }
-function ConversationRow({ title, handleClick }: ConversationRowProps) {
+function ConversationRow({
+  title,
+  handleClick,
+  handleDelete,
+  conversation_id,
+}: ConversationRowProps) {
   return (
     <div className="conversation-row" onClick={handleClick}>
       {title}
+      <span
+        className="conversation-row-delete"
+        style={{
+          position: "absolute",
+          padding: ".8rem",
+          top: 0,
+          right: 0,
+          cursor: "pointer",
+        }}
+        onClick={(e) => handleDelete(e, conversation_id)}
+      >
+        <span className="delete-icon">
+          <DeleteIcon />
+        </span>
+        <span className="delete-icon-2">
+          <DeleteForeverIcon />
+        </span>
+      </span>
     </div>
   );
 }

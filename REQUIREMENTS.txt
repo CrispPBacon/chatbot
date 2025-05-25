@@ -1,0 +1,27 @@
+CHATBOT REQUIREMENTS
+
+USER AUTHENTICATION
+
+- Users can create accounts and log in securely.
+
+- Each user has a unique profile.
+
+- Conversations are saved per user account.
+
+CHAT HISTORY LIST
+
+- Users can view a list of previous conversations.
+
+- Each history entry includes a conversation title or summary.
+
+- Users can delete old conversations.
+
+CHAT MESSAGES
+
+- Real-time exchange of messages between user and chatbot.
+
+DISPLAY PROFILE
+
+- Users can view their profile information.
+
+- Includes profile picture, and name

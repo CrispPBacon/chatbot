@@ -89,18 +89,17 @@ export async function getMessages(user_id, conversation_id) {
   return messages;
 }
 
-export async function sendPromptRequest(user_id, conversation_id, content) {
+export async function sendPromptRequest(user_id, conversation_id, messages) {
   const response = await getChatCompletion([
     {
       role: "system",
       content:
         "You are a helpful assistant that summarizes conversations. Limit it to maximum of 10 sentences.",
     },
-    {
-      role: "user",
-      content,
-    },
+    ...messages,
   ]);
+
+  const content = messages[messages.length - 1].content;
 
   await newMessage(user_id, "user", content, conversation_id);
   const assistant_message = await newMessage(
@@ -116,4 +115,12 @@ export async function sendPromptRequest(user_id, conversation_id, content) {
 export async function getConversations(user_id) {
   const Conversations = await Conversation.find({ user_id });
   return Conversations;
+}
+
+export async function deleteChat(_id, user_id) {
+  const result = await Conversation.deleteOne({ _id, user_id });
+  const msgResult = await Message.deleteMany({ conversation_id: _id, user_id });
+
+  // console.log(result, msgResult);
+  return result;
 }

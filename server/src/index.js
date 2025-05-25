@@ -15,7 +15,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
 
-const corsConfig = { credentials: true, origin: "http://localhost:5173" };
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : [];
+const corsConfig = { credentials: true, origin: allowedOrigins };
 
 /* Session and MongoDBStore Configuration */
 const store = new MongoDBStoreSession({
@@ -35,7 +38,7 @@ const session_config = {
   cookie: {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    sameSite: "None",
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
   store: store,
@@ -56,5 +59,6 @@ app.use([session(session_config), session_log, router, errorHandlerMiddleware]);
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://${HOST}:${PORT}`);
+  console.log(process.env.NODE_ENV === "production");
   connect();
 });

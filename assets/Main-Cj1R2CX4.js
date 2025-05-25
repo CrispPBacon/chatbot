@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Sidebar-BELUlK3d.js","assets/index-Dx6nqhiM.js","assets/index-CenWgVP9.css"])))=>i.map(i=>d[i]);
+import{j as t,R as a,O as e,_ as r}from"./index-Dx6nqhiM.js";const s=a.lazy(()=>r(()=>import("./Sidebar-BELUlK3d.js"),__vite__mapDeps([0,1,2])));function o(){return t.jsxs(t.Fragment,{children:[t.jsx(s,{}),t.jsx(e,{})]})}export{o as default};

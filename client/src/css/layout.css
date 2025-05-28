@@ -231,12 +231,98 @@
   width: 100%;
 }
 
+.profile-img {
+  border-radius: 100px;
+  overflow: hidden;
+}
 .profile-img img {
-  width: 3rem;
   border-radius: 100px;
   border: 2px solid grey;
+  width: 3rem;
 }
 
 .profile-details h6 {
   margin-left: 1rem;
+}
+
+/* ? ADMIN LAYOUT */
+
+.admin-container {
+  /* background-color: red; */
+  padding: 1rem;
+  height: 100vh;
+  overflow-y: hidden;
+  padding-bottom: 2rem;
+}
+
+.admin-container h1 {
+  font-weight: bold;
+  /* background-color: red; */
+  margin: 1rem 0;
+  margin-bottom: 3rem;
+}
+
+.dashboard-statistics-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.statistic-item {
+  background-color: wheat;
+  height: 10rem;
+  padding: 1.5rem 2rem;
+  justify-content: space-between;
+  border-radius: 5px;
+}
+
+.dashboard-users-container {
+  position: relative;
+  height: 22rem;
+}
+
+.dashboard-users-container h2 {
+  margin-top: 2rem;
+}
+
+.dashboard-users-grid,
+.users-grid-row {
+  display: grid;
+}
+
+.dashboard-users-grid {
+  grid-auto-rows: 3rem;
+  gap: 0.5rem;
+  overflow-y: auto;
+  height: calc(100% - 2rem);
+  /* background-color: red; */
+}
+
+.users-grid-row {
+  grid-template-columns: repeat(auto-fit, minmax(1rem, 1fr));
+  /* background-color: blue; */
+  gap: 0.5rem;
+}
+
+.users-grid-header {
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  background-color: var(--background-color);
+  z-index: 1;
+}
+
+.users-grid-item {
+  position: relative;
+}
+
+.users-grid-item .profile-img {
+  max-width: 2rem;
+  max-height: 2rem;
+  margin-right: 0.5rem;
+}
+
+.users-grid-item .profile-img img {
+  width: 2rem;
+  border: 1px solid gray;
 }

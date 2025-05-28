@@ -9,6 +9,7 @@ import {
   fetchMessages,
   fetchConversations,
   deleteConversation,
+  fetchStatistics,
 } from "./controller.js";
 import {
   validateConversation,
@@ -31,7 +32,7 @@ router.route("/api/ping").get((req, res) => {
 // ? [PRIVATE] ROUTES
 router.use(verifyAuth);
 
-// ! [AUTH] RELATED ROUTES
+// ? [AUTH] RELATED ROUTES
 router.route("/api/chat").post(newConversation).get(fetchConversations);
 router
   .route("/api/chat/:id")
@@ -40,5 +41,8 @@ router
   .delete(checkConversation, deleteConversation);
 
 router.route("/api/logout").delete(logout);
+
+// ! [ADMIN] ROUTES
+router.route("/api/admin/statistics").get(fetchStatistics);
 
 export default router;

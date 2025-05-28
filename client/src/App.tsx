@@ -8,7 +8,7 @@ const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/Login"));
 const Signup = React.lazy(() => import("./components/Signup"));
 const ChatLayout = React.lazy(() => import("./components/ChatLayout"));
-// const ChatNew = React.lazy(() => import("./components/ChatNew"));
+const AdminLayout = React.lazy(() => import("./components/AdminLayout"));
 
 export default function App() {
   return (
@@ -22,6 +22,7 @@ export default function App() {
           <Route path="/" element={<ChatLayout />} />
           <Route path="/:id" element={<ChatLayout />} />
         </Route>
+        <Route path="/admin" element={<AdminLayout />} />
       </Route>
     </Routes>
   );

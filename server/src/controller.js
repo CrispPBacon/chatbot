@@ -1,4 +1,5 @@
 import User from "./models/user.js";
+import { getStatistics } from "./services/admin.js";
 import { isValidSession, loginUser } from "./services/auth.js";
 import {
   createNewChat,
@@ -157,6 +158,21 @@ export async function deleteConversation(req, res, next) {
     const user_id = req.session?.user_id;
     await deleteChat(_id, user_id);
     res.status(200).json({ msg: `DELETED ${_id}` });
+  } catch (e) {
+    next(e);
+  }
+}
+
+// ! ADMIN ROUTES ! //
+
+/* GET http://localhost:3000/api/admin/statistics*/
+export async function fetchStatistics(req, res, next) {
+  try {
+    const { users, usersCount, conversationsCount, messagesCount } =
+      await getStatistics();
+    return res
+      .status(200)
+      .json({ users, usersCount, conversationsCount, messagesCount });
   } catch (e) {
     next(e);
   }

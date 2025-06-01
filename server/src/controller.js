@@ -9,6 +9,7 @@ import {
   sendPromptRequest,
 } from "./services/chat.js";
 import { UnauthorizedError } from "./utils/errors.js";
+import { formatReadableDate } from "./utils/general-utils.js";
 // ! AUTH CONTROLLER ! //
 
 /* POST http://localhost:3000/api/user 
@@ -28,6 +29,7 @@ export async function createUser(req, res, next) {
   try {
     const user = req.body.data;
     const data = await new User(user).save();
+    console.log(formatReadableDate(data.createdAt));
     return res.status(201).json(data);
   } catch (e) {
     next(e);
@@ -133,7 +135,6 @@ export async function fetchMessages(req, res, next) {
     const { id } = req.params;
     const user_id = req.session?.user_id;
     const messages = await getMessages(user_id, id);
-
     return res.status(200).json(messages.reverse());
   } catch (e) {
     next(e);

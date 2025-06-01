@@ -17,3 +17,16 @@ export function toTitleCase(str) {
     (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
   );
 }
+
+export function formatReadableDate(date) {
+  const options = {
+    year: "numeric",
+    month: "short", // "Jan", "Feb", etc.
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  return new Date(date).toLocaleString("en-US", options);
+}

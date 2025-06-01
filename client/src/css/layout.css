@@ -25,7 +25,6 @@
 
 .main {
   grid-area: main;
-  /* background-color: red; */
   display: grid;
   grid-template-rows: 1fr 9rem;
   overflow-y: auto;
@@ -34,7 +33,6 @@
 /* ? CHAT STYLE MAIN */
 
 .message-container {
-  /* background-color: red; */
   display: flex;
   flex-direction: column-reverse;
   padding: 1rem 2rem;
@@ -43,20 +41,55 @@
 
 .message-row {
   display: flex;
-  /* background-color: blue; */
 }
 
 .message-row span {
   background-color: #323232d9;
   color: white;
-  padding: 0.5rem;
+  padding: 1rem 1rem;
   border-radius: 5px;
-  max-width: 40rem;
+  max-width: 50rem;
+  font-size: 1.15rem;
+  overflow-y: auto;
+}
+
+/* ? RESET STYLE */
+.message-row h1,
+.message-row h2,
+.message-row h3,
+.message-row h4,
+.message-row h5,
+.message-row h6,
+.message-row p,
+.message-row ul p {
+  /* margin: 0; */
+  color: white;
+}
+
+.message-row span pre {
+  background: #151515e9;
   font-size: 0.8rem;
+  /* padding: 1em;
+  overflow-x: auto;
+  white-space: pre;
+  border-radius: 6px;
+  font-family: monospace;
+  margin: 1rem 0; */
+}
+
+.message-row pre::-webkit-scrollbar:horizontal {
+  height: 5px;
+}
+.message-row pre::-webkit-scrollbar-track {
+  background: #999999;
+  border: 2px solid transparent;
+  border-radius: 20px;
+}
+.message-row pre::-webkit-scrollbar-thumb:hover {
+  background: #303030;
 }
 
 .message-row:not(:first-child) {
-  /* background-color: red; */
   margin-bottom: 1rem;
 }
 
@@ -234,11 +267,29 @@
 .profile-img {
   border-radius: 100px;
   overflow: hidden;
+  max-width: 3rem;
+  max-height: 3rem;
+  border: 2px solid grey;
+  position: relative;
 }
+
+.profile-img:hover::after {
+  content: "";
+  position: absolute;
+  background-color: #00000033;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.profile-img:hover {
+  border: 2px solid greenyellow;
+}
+
 .profile-img img {
   border-radius: 100px;
-  border: 2px solid grey;
   width: 3rem;
+  height: 3rem;
 }
 
 .profile-details h6 {

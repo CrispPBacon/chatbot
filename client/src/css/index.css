@@ -48,10 +48,6 @@ body {
   /* overflow-y: hidden; */
 }
 
-ul li {
-  list-style: none;
-}
-
 img {
   max-width: 10rem;
 }
@@ -139,7 +135,6 @@ input:focus {
 ::-webkit-scrollbar-thumb:hover {
   background: #151515;
 }
-
 @media screen and (max-width: 576px) {
   :root {
     --fs-default: 0.8rem;

@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api";
 import useAuth from "../hooks/useAuth";
 
+import ReactMarkdown from "react-markdown";
+import "github-markdown-css/github-markdown.css";
+
 interface messagesProps {
   user_id: string | undefined;
   conversation_id: string;
@@ -116,10 +119,16 @@ interface MessageRowProps {
   isUser: boolean;
   content: string;
 }
+
 function MessageRow({ isUser, content }: MessageRowProps) {
+  const fixedContent = content.replace(/\n/g, "  \n");
+
   return (
     <div className={isUser ? "message-row user-message" : "message-row"}>
-      <span>{content}</span>
+      <span className="markdown-body">
+        <ReactMarkdown>{fixedContent}</ReactMarkdown>
+        {/* {content} */}
+      </span>
     </div>
   );
 }

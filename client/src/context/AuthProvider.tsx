@@ -22,10 +22,10 @@ interface childProp {
 interface AuthContextType {
   auth: authProps | null;
   isLoading: boolean;
-  conversationList: conversationProps[];
+  conversationList: conversationListProps[];
   setAuth: Dispatch<SetStateAction<authProps | null>>;
   setLoading: Dispatch<SetStateAction<boolean>>;
-  setConversationList: Dispatch<SetStateAction<conversationProps[]>>;
+  setConversationList: Dispatch<SetStateAction<conversationListProps[]>>;
 }
 interface authProps {
   user: UserProps;
@@ -35,6 +35,12 @@ interface conversationProps {
   _id: string;
   user_id: string;
   title: string;
+  updatedAt: string;
+}
+
+export interface conversationListProps {
+  timestamp: string;
+  conversations: conversationProps[];
 }
 
 const initialContext: AuthContextType = {
@@ -51,9 +57,9 @@ const AuthContext = createContext(initialContext);
 export const AuthProvider = ({ children }: childProp) => {
   const [auth, setAuth] = useState<authProps | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const [conversationList, setConversationList] = useState<conversationProps[]>(
-    []
-  );
+  const [conversationList, setConversationList] = useState<
+    conversationListProps[]
+  >([]);
 
   useEffect(() => {
     api

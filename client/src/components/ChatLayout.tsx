@@ -11,6 +11,7 @@ interface messagesProps {
   conversation_id: string;
   role: string;
   content: string;
+  updatedAt: string;
 }
 
 export default function ChatLayout() {
@@ -52,12 +53,14 @@ export default function ChatLayout() {
         role: "user",
         conversation_id: id,
         user_id: auth?.user._id,
+        updatedAt: new Date().toString(),
       };
       const data = { messages: [user_message, ...messages] };
       setMessages((prev) => [user_message, ...prev]);
       api
         .post(`/api/chat/${id}`, { data }, { withCredentials: true })
         .then((res) => {
+          updateChatHistory();
           setMessages((prev) => [...res.data, ...prev]);
           setShowLoader(false);
         })
@@ -71,18 +74,22 @@ export default function ChatLayout() {
         .then((res) => {
           navigate(res.data._id, { replace: true });
           setShowLoader(false);
-          api
-            .get("/api/chat", { withCredentials: true })
-            .then((res) => {
-              setConversationList(res.data);
-            })
-            .catch((e) => console.log(e?.response?.data?.error || e));
+          updateChatHistory();
         })
         .catch((e) => {
           console.log(e?.response?.data?.error || e);
           setShowLoader(false);
         });
     }
+  };
+
+  const updateChatHistory = () => {
+    api
+      .get("/api/chat", { withCredentials: true })
+      .then((res) => {
+        setConversationList(res.data);
+      })
+      .catch((e) => console.log(e?.response?.data?.error || e));
   };
 
   return (
@@ -124,10 +131,13 @@ function MessageRow({ isUser, content }: MessageRowProps) {
   const fixedContent = content.replace(/\n/g, "  \n");
 
   return (
-    <div className={isUser ? "message-row user-message" : "message-row"}>
+    <div
+      className={
+        isUser ? "message-row user-message" : "theme-transparen message-row"
+      }
+    >
       <span className="markdown-body">
         <ReactMarkdown>{fixedContent}</ReactMarkdown>
-        {/* {content} */}
       </span>
     </div>
   );

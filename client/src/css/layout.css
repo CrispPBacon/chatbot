@@ -44,7 +44,7 @@
 }
 
 .message-row span {
-  background-color: #323232d9;
+  /* background-color: #323232d9; */
   color: white;
   padding: 1rem 1rem;
   border-radius: 5px;
@@ -67,8 +67,8 @@
 }
 
 .message-row span pre {
-  background: #151515e9;
-  font-size: 0.8rem;
+  /* background: #151515e9; */
+  font-size: 0.85rem;
   /* padding: 1em;
   overflow-x: auto;
   white-space: pre;
@@ -120,7 +120,7 @@
   color: white;
 }
 
-/* ? CHAT STYLE SIDEBAR */
+/* ? SIDEBAR */
 .conversation-container {
   position: relative;
 }
@@ -155,6 +155,10 @@
   padding: 0.5rem;
 }
 
+.conversation-row-date:not(:first-child) {
+  margin-top: 2rem;
+}
+
 .conversation-row,
 .conversation-row-date p {
   margin-bottom: 0;
@@ -182,8 +186,9 @@
 .conversation-history:not(:last-child) .conversation-row:last-child {
   margin-bottom: 1rem;
 }
-.conversation-row:hover {
-  background-color: #323232d9;
+.conversation-row:hover,
+.conversation-row.active {
+  background-color: #323232;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -202,18 +207,17 @@
   margin-top: 0.5rem;
 }
 
-.conversation-row-delete,
-.delete-icon-2 {
-  display: none;
-}
-.conversation-row:hover .conversation-row-delete,
-.delete-icon {
-  display: flex;
+.conversation-row-delete {
+  background: linear-gradient(to right, transparent 10%, #323232d9 20%);
 }
 
+.conversation-row-delete,
+.delete-icon-2,
 .conversation-row-delete:hover .delete-icon {
   display: none;
 }
+.conversation-row:hover .conversation-row-delete,
+.delete-icon,
 .conversation-row-delete:hover .delete-icon-2 {
   display: flex;
 }

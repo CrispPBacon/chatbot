@@ -1,18 +1,22 @@
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/api";
 import useAuth from "../hooks/useAuth";
-import { useEffect } from "react";
+import React from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+import {
+  format,
+  isToday,
+  isYesterday,
+  isThisWeek,
+  isThisYear,
+  parseISO,
+} from "date-fns";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const { setAuth, auth, conversationList, setConversationList } = useAuth();
-  const { id } = useParams();
-
-  useEffect(() => {
-    if (id) console.log(id);
-  }, [id]);
 
   const handleLogout = () => {
     api
@@ -27,18 +31,28 @@ export default function Sidebar() {
 
   const handleDelete = async (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    conversation_id: string
+    conversation_id: string,
+    timestamp: string
   ) => {
     e.stopPropagation();
+
     api
       .delete(`/api/chat/${conversation_id}`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
-        setConversationList((prev) => {
-          return prev.filter((item) => item._id !== conversation_id);
-        });
+        console.log(res.data, timestamp);
+        setConversationList(
+          (prev) =>
+            prev
+              .map((item) => ({
+                ...item,
+                conversations: item.conversations.filter(
+                  (conv) => conv._id !== conversation_id
+                ),
+              }))
+              .filter((item) => item.conversations.length > 0) // Optional: remove empty date groups
+        );
         navigate("/");
       })
       .catch((e) => console.log(e?.response?.data?.error || e));
@@ -59,7 +73,23 @@ export default function Sidebar() {
           </button>
         </div>
         <div className="conversation-history">
-          <ConversationDate date="Chats" />
+          {conversationList.map((title, index) => (
+            <React.Fragment key={index}>
+              <ConversationDate date={title.timestamp} />
+              {title.conversations.map((conversation) => (
+                <ConversationRow
+                  key={conversation._id}
+                  title={conversation.title}
+                  handleClick={() => navigate(`/${conversation._id}`)}
+                  handleDelete={handleDelete}
+                  conversation_id={conversation._id}
+                  timestamp={conversation.updatedAt}
+                />
+              ))}
+            </React.Fragment>
+          ))}
+
+          {/* <ConversationDate date="Chats" />
           {conversationList.map((conversation) => (
             <ConversationRow
               key={conversation._id}
@@ -67,8 +97,9 @@ export default function Sidebar() {
               handleClick={() => navigate(`/${conversation._id}`)}
               handleDelete={handleDelete}
               conversation_id={conversation._id}
+              timestamp={conversation.updatedAt}
             />
-          ))}
+          ))} */}
         </div>
 
         {/* <div className="conversation-history">
@@ -102,21 +133,31 @@ export default function Sidebar() {
 
 interface ConversationRowProps {
   title: string;
+  timestamp: string;
   handleClick: () => void;
   handleDelete: (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    conversation_id: string
+    conversation_id: string,
+    timestamp: string
   ) => void;
   conversation_id: string;
 }
 function ConversationRow({
   title,
+  timestamp,
   handleClick,
   handleDelete,
   conversation_id,
 }: ConversationRowProps) {
+  const { id } = useParams();
+
   return (
-    <div className="conversation-row" onClick={handleClick}>
+    <div
+      className={
+        id === conversation_id ? "conversation-row active" : "conversation-row"
+      }
+      onClick={handleClick}
+    >
       {title}
       <span
         className="conversation-row-delete"
@@ -127,7 +168,7 @@ function ConversationRow({
           right: 0,
           cursor: "pointer",
         }}
-        onClick={(e) => handleDelete(e, conversation_id)}
+        onClick={(e) => handleDelete(e, conversation_id, timestamp)}
       >
         <span className="delete-icon">
           <DeleteIcon />
@@ -144,9 +185,31 @@ interface ConversationDateProps {
   date: string;
 }
 function ConversationDate({ date }: ConversationDateProps) {
+  const convertDate = (d: string) => {
+    const parsedDate = parseISO(d);
+
+    let displayDate: string;
+
+    if (isToday(parsedDate)) {
+      displayDate = "Today";
+    } else if (isYesterday(parsedDate)) {
+      displayDate = "Yesterday";
+    } else if (isThisWeek(parsedDate, { weekStartsOn: 1 })) {
+      // Returns weekday name, e.g., "Monday"
+      displayDate = format(parsedDate, "EEEE");
+    } else if (isThisYear(parsedDate)) {
+      // Returns "June 2"
+      displayDate = format(parsedDate, "MMMM d");
+    } else {
+      // Returns "June 2, 2024"
+      displayDate = format(parsedDate, "MMMM d, yyyy");
+    }
+    return displayDate;
+  };
+
   return (
     <div className="conversation-row-date">
-      <p>{date}</p>
+      <p>{convertDate(date)}</p>
     </div>
   );
 }

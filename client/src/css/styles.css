@@ -1,0 +1,26 @@
+.theme-transparent.message-row span {
+  max-width: 100%;
+  color: black;
+  background-color: transparent;
+}
+
+.theme-transparent.message-row span pre {
+  background-color: transparent;
+  font-size: 1rem;
+}
+
+.theme-transparent.message-row h1,
+.theme-transparent.message-row h2,
+.theme-transparent.message-row h3,
+.theme-transparent.message-row h4,
+.theme-transparent.message-row h5,
+.theme-transparent.message-row h6,
+.theme-transparent.message-row p,
+.theme-transparent.message-row ul p,
+.theme-transparent.message-row span pre {
+  color: black;
+}
+
+.user-message:not(:last-child) span {
+  margin-top: 8rem;
+}

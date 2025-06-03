@@ -10,6 +10,8 @@ import {
   fetchConversations,
   deleteConversation,
   fetchStatistics,
+  sendForgotPasswordMail,
+  forgotPassword,
 } from "./controller.js";
 import {
   validateConversation,
@@ -28,6 +30,8 @@ router.route("/api/user").post(validateSignUp, createUser);
 router.route("/api/ping").get((req, res) => {
   return res.status(200).json({ msg: "OK" });
 });
+router.route("/api/forgot-password").post(sendForgotPasswordMail);
+router.route("/api/reset-password/:token").post(forgotPassword);
 
 // ? [PRIVATE] ROUTES
 router.use(verifyAuth);

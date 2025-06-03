@@ -9,6 +9,13 @@ import {
   sendPromptRequest,
 } from "./services/chat.js";
 import { UnauthorizedError } from "./utils/errors.js";
+
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 // ! AUTH CONTROLLER ! //
 
 /* POST http://localhost:3000/api/user 
@@ -164,7 +171,7 @@ export async function deleteConversation(req, res, next) {
 
 // ! ADMIN ROUTES ! //
 
-/* GET http://localhost:3000/api/admin/statistics*/
+/* GET http://localhost:3000/api/admin/statistics */
 export async function fetchStatistics(req, res, next) {
   try {
     const { users, usersCount, conversationsCount, messagesCount } =
@@ -174,5 +181,53 @@ export async function fetchStatistics(req, res, next) {
       .json({ users, usersCount, conversationsCount, messagesCount });
   } catch (e) {
     next(e);
+  }
+}
+
+/* POST http://localhost:3000/api/forgot-password  */
+export async function sendForgotPasswordMail(req, res, next) {
+  try {
+    const { email } = req.body.data;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+    const link = `${process.env.CLIENT_URL}/reset-password/${token}`;
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Your App" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${link}">here</a> to reset your password</p>`,
+    });
+
+    return res.json({ message: "Password reset link sent" });
+  } catch (e) {
+    next(e);
+  }
+}
+
+/* POST http://localhost:3000/api/reset-password/:token  */
+
+export async function forgotPassword(req, res, next) {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    await User.findByIdAndUpdate(decoded.id, { password });
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    next(err);
   }
 }
